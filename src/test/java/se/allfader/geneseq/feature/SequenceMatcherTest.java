@@ -2,6 +2,7 @@ package se.allfader.geneseq.feature;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import se.allfader.geneseq.domain.primer.PrimerId;
 import se.allfader.geneseq.domain.primitives.BasePairSequence;
 import se.allfader.geneseq.domain.primer.Primer;
 import se.allfader.geneseq.domain.sequence.Sequence;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 class SequenceMatcherTest {
     private static final UUID PRIMER_BASE_PAIR_SEQUENCE_ID = UUID.randomUUID();
+    private static final PrimerId PRIMER_ID = new PrimerId(UUID.randomUUID());
     private static final UUID SEQUENCE_BASE_PAIR_SEQUENCE_ID = UUID.randomUUID();
     private final String testSequence =
             "actcccagcgtaccgaacgacaagcgaggggacgacagaacaagagactgctttcaagtgggtattatattgtaaattactccgtcgaccgaggtaggcg";
@@ -23,7 +25,7 @@ class SequenceMatcherTest {
             "ccc"
     })
     void test(String primerSequence) {
-        Primer primer = new Primer(new BasePairSequence(PRIMER_BASE_PAIR_SEQUENCE_ID, primerSequence));
+        Primer primer = new Primer(PRIMER_ID, new BasePairSequence(PRIMER_BASE_PAIR_SEQUENCE_ID, primerSequence));
         Sequence sequence = new Sequence(new BasePairSequence(SEQUENCE_BASE_PAIR_SEQUENCE_ID, testSequence));
 
         Collection<SequenceMatcher.MatchScore> matchScores = new SequenceMatcher(sequence).matchPrimer(primer);
