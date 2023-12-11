@@ -1,6 +1,6 @@
 package se.allfader.geneseq.domain.sequence;
 
-import se.allfader.geneseq.domain.core.BasePairSequence;
+import se.allfader.geneseq.domain.primitives.BasePairSequence;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
