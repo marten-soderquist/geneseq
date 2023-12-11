@@ -3,13 +3,17 @@ package se.allfader.geneseq.domain.primitives;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 public final class BasePairSequence {
+
+    private final UUID id;
     private final String sequence;
     private final boolean isRna;
 
-    public BasePairSequence(String sequence) {
+    public BasePairSequence(UUID id, String sequence) {
+        this.id = id;
         throwIfContainsInvalidCharacter(sequence);
         this.isRna = isRNASequence(sequence);
         if (isRna) {
@@ -76,6 +80,10 @@ public final class BasePairSequence {
 
     public String sequence() {
         return sequence;
+    }
+
+    public UUID id(){
+        return id;
     }
 
     @Override
