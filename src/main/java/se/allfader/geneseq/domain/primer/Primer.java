@@ -1,6 +1,6 @@
-package se.allfader.geneseq.model.primer;
+package se.allfader.geneseq.domain.primer;
 
-import se.allfader.geneseq.model.core.BasePairSequence;
+import se.allfader.geneseq.domain.core.BasePairSequence;
 
 public class Primer {
     private final BasePairSequence basePairSequence;

@@ -1,8 +1,8 @@
-package se.allfader.geneseq.model.sequence;
+package se.allfader.geneseq.domain.sequence;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import se.allfader.geneseq.model.core.BasePairSequence;
+import se.allfader.geneseq.domain.core.BasePairSequence;
 
 import static org.junit.jupiter.api.Assertions.*;
 

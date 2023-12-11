@@ -1,4 +1,4 @@
-package se.allfader.geneseq.model.core;
+package se.allfader.geneseq.domain.core;
 
 import java.util.Collection;
 import java.util.List;

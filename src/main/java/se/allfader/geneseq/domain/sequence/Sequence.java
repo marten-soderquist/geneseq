@@ -1,13 +1,9 @@
-package se.allfader.geneseq.model.sequence;
+package se.allfader.geneseq.domain.sequence;
 
-import se.allfader.geneseq.model.core.BasePairSequence;
+import se.allfader.geneseq.domain.core.BasePairSequence;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static java.util.function.Predicate.not;
 
 public final class Sequence {
     private final BasePairSequence basePairSequence;

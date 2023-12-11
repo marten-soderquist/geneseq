@@ -1,4 +1,4 @@
-package se.allfader.geneseq.model.core;
+package se.allfader.geneseq.domain.core;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

@@ -1,4 +1,4 @@
-package se.allfader.geneseq.model.sequence;
+package se.allfader.geneseq.domain.sequence;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

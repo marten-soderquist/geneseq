@@ -1,10 +1,9 @@
 package se.allfader.geneseq.feature;
 
-import se.allfader.geneseq.model.primer.Primer;
-import se.allfader.geneseq.model.sequence.Sequence;
+import se.allfader.geneseq.domain.primer.Primer;
+import se.allfader.geneseq.domain.sequence.Sequence;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
