@@ -23,19 +23,19 @@ class PrimerNameTest {
             "ALongPrimerNameWithMoreThan18Characters"
     })
     void shouldNotAllowNameLongerThan18(final String input) {
-        assertPrimerNameThrows(input, "name must not exceed 18 characters", "wrong error message");
+        assertPrimerNameThrows(input, "name must not exceed 18 characters");
     }
 
     @ParameterizedTest
     @NullSource
     void shouldNotAllowNullName(final String input) {
-        assertPrimerNameThrows(input, "must not be null", "wrong error message");
+        assertPrimerNameThrows(input, "must not be null");
     }
 
     @ParameterizedTest
     @EmptySource
     void shouldNotAllowEmptyName(final String input) {
-        assertPrimerNameThrows(input, "must not be empty", "wrong error message");
+        assertPrimerNameThrows(input, "must not be empty");
     }
 
     @ParameterizedTest
@@ -44,14 +44,14 @@ class PrimerNameTest {
             "!BBBAN"
     })
     void shouldNotAllowInvalidCharacters(final String input) {
-        assertPrimerNameThrows(input, "contains invalid characters", "wrong error message");
+        assertPrimerNameThrows(input, "contains invalid characters");
     }
 
-    private void assertPrimerNameThrows(String input, String expectedExceptionMessage, String errorMessage) {
+    private void assertPrimerNameThrows(String input, String expectedExceptionMessage) {
         IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class,
                 () -> PrimerName.fromString(input));
         assertEquals(expectedExceptionMessage, illegalArgumentException.getMessage(),
-                errorMessage);
+                "wrong error message");
     }
 
     @ParameterizedTest
