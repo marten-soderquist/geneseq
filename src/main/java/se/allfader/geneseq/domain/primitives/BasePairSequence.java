@@ -1,25 +1,29 @@
 package se.allfader.geneseq.domain.primitives;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.IntStream;
 
-public final class BasePairSequence {
+import static java.util.function.Predicate.not;
 
+public final class BasePairSequence {
+    public static final Collection<Character> VALID_CHARACTERS = List.of('a', 't', 'c', 'g', 'u');
     private final UUID id;
     private final String sequence;
     private final boolean isRna;
 
     public BasePairSequence(UUID id, String sequence) {
         this.id = id;
-        throwIfContainsInvalidCharacter(sequence);
-        this.isRna = isRNASequence(sequence);
+        String cleanSequence = Optional.ofNullable(sequence)
+                .map(s -> s.replace(" ", ""))
+                .map(String::toLowerCase)
+                .filter(not(String::isBlank))
+                .orElseThrow(() -> new IllegalArgumentException("sequence is empty"));
+        throwIfContainsInvalidCharacter(cleanSequence);
+        this.isRna = isRNASequence(cleanSequence);
         if (isRna) {
-            throwIfContainsT(sequence);
+            throwIfContainsT(cleanSequence);
         }
-        this.sequence = sequence.toLowerCase();
+        this.sequence = cleanSequence;
     }
 
     public String reverseAntiSense() {
@@ -44,10 +48,9 @@ public final class BasePairSequence {
     }
 
     private static void throwIfContainsInvalidCharacter(final String s) {
-        Collection<Character> validCharacters = List.of('A', 'T', 'C', 'G', 'U', 'a', 't', 'c', 'g', 'u');
         IntStream.range(0, s.length())
                 .forEach(i -> {
-                    if (!validCharacters.contains(s.charAt(i))) {
+                    if (!VALID_CHARACTERS.contains(s.charAt(i))) {
                         throw new IllegalArgumentException("sequence contains invalid character %s [pos=%s]"
                                 .formatted(s.charAt(i), i + 1));
                     }
@@ -56,10 +59,6 @@ public final class BasePairSequence {
 
     public boolean isRNA() {
         return isRna;
-    }
-
-    private static boolean rnaSequenceDoesNotContainT(final String s) {
-        return isRNASequence(s) && s.contains("t");
     }
 
     private static boolean isRNASequence(final String s) {
@@ -82,7 +81,7 @@ public final class BasePairSequence {
         return sequence;
     }
 
-    public UUID id(){
+    public UUID id() {
         return id;
     }
 

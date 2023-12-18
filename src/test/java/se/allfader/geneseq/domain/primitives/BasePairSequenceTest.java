@@ -17,11 +17,8 @@ class BasePairSequenceTest {
             "atcgatcg,cgatcgat",
             "auugc,gcaat"
     })
-    void shouldCreateFromSense(String sense, String expectedReverseAntiSense) {
+    void shouldReturnExpectedReverseAntiSense(String sense, String expectedReverseAntiSense) {
         BasePairSequence basePairSequence = new BasePairSequence(ID, sense);
-
-        System.out.println(basePairSequence.sequence());
-        System.out.println(basePairSequence.reverseAntiSense());
         assertEquals(expectedReverseAntiSense, basePairSequence.reverseAntiSense());
     }
 
@@ -49,8 +46,8 @@ class BasePairSequenceTest {
     @ParameterizedTest
     @CsvSource(value = {
             "ACgqgTTtt, sequence contains invalid character q [pos=4]",
-            "aacggUUX, sequence contains invalid character X [pos=8]",
-            "ATTGXGTGCaCTG, sequence contains invalid character X [pos=5]"
+            "aacggUUX, sequence contains invalid character x [pos=8]",
+            "ATTGXGTGCaCTG, sequence contains invalid character x [pos=5]"
     })
     void shouldNotAllowNonBaseCharacters(final String testSequence, String expectedErrorMessage) {
         var error = assertThrows(IllegalArgumentException.class, () -> new BasePairSequence(ID, testSequence));
@@ -63,4 +60,11 @@ class BasePairSequenceTest {
         BasePairSequence basePairSequence = new BasePairSequence(id, VALID_SEQUENCE);
         assertEquals(id, basePairSequence.id());
     }
+    @Test
+    void shouldReturnSequence() {
+        BasePairSequence basePairSequence = new BasePairSequence(ID, VALID_SEQUENCE);
+        assertEquals(VALID_SEQUENCE, basePairSequence.sequence());
+    }
+
+
 }
