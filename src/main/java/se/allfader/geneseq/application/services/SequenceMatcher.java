@@ -1,5 +1,6 @@
-package se.allfader.geneseq.feature;
+package se.allfader.geneseq.application.services;
 
+import se.allfader.geneseq.domain.matchscore.MatchScore;
 import se.allfader.geneseq.domain.primer.Primer;
 import se.allfader.geneseq.domain.sequence.Sequence;
 
@@ -38,7 +39,7 @@ public class SequenceMatcher {
         return new MatchScore(primerId, sequenceId, sequencePosition,
                 countMatchingBases(primerSequence, subSequence),
                 primerSequence.length(),
-                MatchScore.MatchType.FORWARD
+                MatchScore.Direction.FORWARD
         );
     }
 
@@ -46,7 +47,7 @@ public class SequenceMatcher {
         return new MatchScore(primerId, sequenceId, sequencePosition,
                 countMatchingBases(primerSequence, subSequence),
                 primerSequence.length(),
-                MatchScore.MatchType.REVERSE
+                MatchScore.Direction.REVERSE
         );
     }
 
@@ -62,13 +63,4 @@ public class SequenceMatcher {
 
     record MatchParams(String subSeq, Integer sensePosition, Integer revAntiSensePosition){}
 
-    public record MatchScore(String primerId, String sequenceId, int sequencePosition, int matchingBasePairs,
-                             int primerLength, MatchType matchType) {
-        public double score(){
-            return (double) matchingBasePairs / primerLength;
-        }
-        enum MatchType {
-            FORWARD, REVERSE
-        }
-    }
 }

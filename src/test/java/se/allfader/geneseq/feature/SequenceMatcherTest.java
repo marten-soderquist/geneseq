@@ -2,7 +2,10 @@ package se.allfader.geneseq.feature;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import se.allfader.geneseq.application.services.SequenceMatcher;
+import se.allfader.geneseq.domain.matchscore.MatchScore;
 import se.allfader.geneseq.domain.primer.PrimerId;
+import se.allfader.geneseq.domain.primer.PrimerName;
 import se.allfader.geneseq.domain.primitives.BasePairSequence;
 import se.allfader.geneseq.domain.primer.Primer;
 import se.allfader.geneseq.domain.sequence.Sequence;
@@ -17,20 +20,22 @@ class SequenceMatcherTest {
     private static final UUID PRIMER_BASE_PAIR_SEQUENCE_ID = UUID.randomUUID();
     private static final PrimerId PRIMER_ID = new PrimerId(UUID.randomUUID());
     private static final UUID SEQUENCE_BASE_PAIR_SEQUENCE_ID = UUID.randomUUID();
+    private static final UUID SEQUENCE_ID = UUID.randomUUID();
+    private static final PrimerName PRIMER_NAME = new PrimerName("Test Primer Name");
     private final String testSequence =
             "actcccagcgtaccgaacgacaagcgaggggacgacagaacaagagactgctttcaagtgggtattatattgtaaattactccgtcgaccgaggtaggcg";
 
     @ParameterizedTest
     @CsvSource(value = {
-            "ccc"
+            "cccttg"
     })
     void test(String primerSequence) {
-        Primer primer = new Primer(PRIMER_ID, new BasePairSequence(PRIMER_BASE_PAIR_SEQUENCE_ID, primerSequence));
-        Sequence sequence = new Sequence(new BasePairSequence(SEQUENCE_BASE_PAIR_SEQUENCE_ID, testSequence));
+        Primer primer = new Primer(PRIMER_ID, PRIMER_NAME, new BasePairSequence(PRIMER_BASE_PAIR_SEQUENCE_ID, primerSequence));
+        Sequence sequence = new Sequence(SEQUENCE_ID, new BasePairSequence(SEQUENCE_BASE_PAIR_SEQUENCE_ID, testSequence));
 
-        Collection<SequenceMatcher.MatchScore> matchScores = new SequenceMatcher(sequence).matchPrimer(primer);
+        Collection<MatchScore> matchScores = new SequenceMatcher(sequence).matchPrimer(primer);
 
-        Map<SequenceMatcher.MatchScore.MatchType, List<SequenceMatcher.MatchScore>> collect = matchScores.stream().collect(Collectors.groupingBy(SequenceMatcher.MatchScore::matchType, Collectors.toList()));
+        Map<MatchScore.Direction, List<MatchScore>> collect = matchScores.stream().collect(Collectors.groupingBy(MatchScore::direction, Collectors.toList()));
 
         System.out.println(collect);
     }

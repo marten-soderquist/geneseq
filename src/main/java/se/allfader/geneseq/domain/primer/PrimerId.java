@@ -17,7 +17,8 @@ public class PrimerId {
         return this.value;
     }
 
-    public String asString() {
+    @Override
+    public String toString() {
         return value.toString();
     }
 

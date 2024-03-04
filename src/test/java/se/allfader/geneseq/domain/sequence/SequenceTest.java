@@ -22,7 +22,7 @@ class SequenceTest {
     }
 
     private static Sequence testSequence(String sequence) {
-        return new Sequence(new BasePairSequence(UUID.randomUUID(), sequence));
+        return new Sequence(UUID.randomUUID(), new BasePairSequence(UUID.randomUUID(), sequence));
     }
 
 }

@@ -2,18 +2,16 @@ package se.allfader.geneseq.domain.sequence;
 
 import se.allfader.geneseq.domain.primitives.BasePairSequence;
 
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class Sequence {
-    private final BasePairSequence basePairSequence;
+public record Sequence(UUID id, BasePairSequence basePairSequence) {
 
-    public Sequence(BasePairSequence basePairSequence) {
-        this.basePairSequence = basePairSequence;
-    }
-
-    public BasePairSequence basePairSequence() {
-        return basePairSequence;
+    public Sequence {
+        Objects.requireNonNull(id, "Sequence id must not be null");
+        Objects.requireNonNull(basePairSequence, "base pairs for a sequence must not be null");
     }
 
     public String subSequenceAtPosition(int position, int length) {
@@ -26,5 +24,9 @@ public final class Sequence {
                     }
                 })
                 .collect(Collectors.joining());
+    }
+
+    public SequenceHash hash(){
+        return SequenceHash.from(basePairSequence.sequence());
     }
 }

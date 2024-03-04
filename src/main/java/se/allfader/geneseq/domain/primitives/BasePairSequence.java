@@ -44,7 +44,6 @@ public final class BasePairSequence {
                         throw new IllegalArgumentException("RNA sequence contains t [pos=%s]".formatted(i + 1));
                     }
                 });
-
     }
 
     private static void throwIfContainsInvalidCharacter(final String s) {
