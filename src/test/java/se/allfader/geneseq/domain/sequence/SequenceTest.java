@@ -16,7 +16,7 @@ class SequenceTest {
             "atc,-2,5,...at",
             "atc,3,5,c...."
     })
-    void shouldPadSubSequence(String sequence, int position, int length, String expectedSubsequence) {
+    void shouldPadSubSequenceWithPeriod(String sequence, int position, int length, String expectedSubsequence) {
         String sequenceAtPosition = testSequence(sequence).subSequenceAtPosition(position, length);
         assertEquals(expectedSubsequence, sequenceAtPosition, "subsequence does not match");
     }
