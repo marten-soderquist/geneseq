@@ -38,7 +38,7 @@ public class PostgresSequenceRepository implements SequenceRepository {
             sequenceEntity.sequence.persist();
             sequenceEntity.persistAndFlush();
         } catch (ConstraintViolationException constraintError) {
-            Log.error(constraintError.getMessage());
+            Log.debug(constraintError.getMessage());
             throw mapPostgresError.apply(constraintError.getSQLState());
         }
     }

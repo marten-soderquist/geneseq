@@ -8,8 +8,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Metric;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.extensions.Extension;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
@@ -46,21 +51,29 @@ public class SequenceApi {
             @APIResponse(responseCode = "503", description = "Operation timed out")
 
     })
+    @Counted(name = "addNewSequence", description = "How many times the addNewSequence endpoint has been called.")
+    @Timed(name = "addSequenceTimer", description = "A measure of how long it takes to add a new sequence.", unit = MetricUnits.MILLISECONDS)
     public Response addNewSequence(
             @NotBlank(message = "name of sequence must not by empty") @HeaderParam("Sequence-Name") String name,
             @Schema(description = "Base pairs of sequence to add", example = "aaatcggttta")
             @NotBlank(message = "sequence cannot be blank") @RequestBody String sequence) {
         Log.info("received request");
+        if(name.equals("boom")){
+            throw new WebApplicationException("Boom!", Response.Status.INTERNAL_SERVER_ERROR);
+        }
         AddSequence.Response response = addSequence.add(sequence, () -> true);
-        return switch (response) {
-            case AddSequence.Response.Success success -> Response.created(uriInfo.getAbsolutePathBuilder()
-                    .path(success.newSequenceId().toString()).build()).build();
-            case AddSequence.Response.Error error -> switch (error.code()) {
-                case FORBIDDEN -> HttpProblem.valueOf(Response.Status.FORBIDDEN, error.reason()).toResponse();
-                case INVALID_INPUT -> HttpProblem.valueOf(Response.Status.BAD_REQUEST, error.reason()).toResponse();
-                case TIMEOUT -> HttpProblem.valueOf(Response.Status.GATEWAY_TIMEOUT, error.reason()).toResponse();
-                case DUPLICATE -> HttpProblem.valueOf(Response.Status.CONFLICT, error.reason()).toResponse();
+
+        switch (response) {
+            case AddSequence.Response.Success success -> {
+                return Response.created(uriInfo.getAbsolutePathBuilder()
+                        .path(success.newSequenceId().toString()).build()).build();
+            }
+            case AddSequence.Response.Error error -> throw switch (error.code()) {
+                case FORBIDDEN -> HttpProblem.valueOf(Response.Status.FORBIDDEN, error.reason());
+                case INVALID_INPUT -> HttpProblem.valueOf(Response.Status.BAD_REQUEST, error.reason());
+                case TIMEOUT -> HttpProblem.valueOf(Response.Status.GATEWAY_TIMEOUT, error.reason());
+                case DUPLICATE -> HttpProblem.valueOf(Response.Status.CONFLICT, error.reason());
             };
-        };
+        }
     }
 }
