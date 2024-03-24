@@ -1,4 +1,4 @@
-package se.allfader.geneseq.application.feature;
+package se.allfader.geneseq.application.commands;
 
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,23 +17,20 @@ public class AddSequence {
         this.sequenceRepository = sequenceRepository;
     }
 
-    public Response add(String sequence, User user) {
-        return add(sequence, user, 2500);
-    }
+//    public Response add(String sequence, User user) {
+//        return add(sequence, user, 2500);
+//    }
+//
+//    public Response add(String sequence, User user, long timeout) {
+//        return handle(new Command(sequence, user));
+//    }
 
-    public Response add(String sequence, User user, long timeout) {
-        Log.info("Sending command");
-        return handle(new Command(sequence, user));
-    }
-
-    Response handle(Command command) {
+    public Response handle(Command command) {
         try {
             if (!command.user().canAddNewSequence()) {
                 return new Response.Error(Response.Error.Code.FORBIDDEN, "user not authorized to add a new sequence");
             }
-            Log.info("Command received");
-            Sequence newSequence = createNewSequence(command.sequence());
-            Log.info("Sequence created");
+            Sequence newSequence = createNewSequence(command.name(), command.sequence());
             try {
                 sequenceRepository.save(newSequence);
             } catch (SequenceRepository.DuplicateConflict duplicateConflict) {
@@ -42,20 +39,17 @@ public class AddSequence {
             } catch (SequenceRepository.TimeoutError timeoutError) {
                 return new Response.Error(Response.Error.Code.TIMEOUT, "save sequence operation timedout");
             }
-
-            Log.info("Persisted");
             return new Response.Success(newSequence.id());
         } catch (IllegalArgumentException err) {
-            Log.error(err.getMessage());
             return new Response.Error(Response.Error.Code.INVALID_INPUT, err.getMessage());
         }
     }
 
-    private static Sequence createNewSequence(String seqString) {
-        return new Sequence(UUID.randomUUID(), new BasePairSequence(UUID.randomUUID(), seqString));
+    private static Sequence createNewSequence(String name, String seqString) {
+        return new Sequence(UUID.randomUUID(), name, new BasePairSequence(UUID.randomUUID(), seqString));
     }
 
-    private record Command(String sequence, User user) {
+    public record Command(String name, String sequence, User user) {
     }
 
     public sealed interface Response permits Response.Success, Response.Error {

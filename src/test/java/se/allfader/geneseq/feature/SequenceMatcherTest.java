@@ -21,6 +21,7 @@ class SequenceMatcherTest {
     private static final PrimerId PRIMER_ID = new PrimerId(UUID.randomUUID());
     private static final UUID SEQUENCE_BASE_PAIR_SEQUENCE_ID = UUID.randomUUID();
     private static final UUID SEQUENCE_ID = UUID.randomUUID();
+    private static final String SEQUENCE_NAME = "SequenceNameTest";
     private static final PrimerName PRIMER_NAME = new PrimerName("Test Primer Name");
     private final String testSequence =
             "actcccagcgtaccgaacgacaagcgaggggacgacagaacaagagactgctttcaagtgggtattatattgtaaattactccgtcgaccgaggtaggcg";
@@ -31,7 +32,7 @@ class SequenceMatcherTest {
     })
     void test(String primerSequence) {
         Primer primer = new Primer(PRIMER_ID, PRIMER_NAME, new BasePairSequence(PRIMER_BASE_PAIR_SEQUENCE_ID, primerSequence));
-        Sequence sequence = new Sequence(SEQUENCE_ID, new BasePairSequence(SEQUENCE_BASE_PAIR_SEQUENCE_ID, testSequence));
+        Sequence sequence = new Sequence(SEQUENCE_ID, SEQUENCE_NAME, new BasePairSequence(SEQUENCE_BASE_PAIR_SEQUENCE_ID, testSequence));
 
         Collection<MatchScore> matchScores = new SequenceMatcher(sequence).matchPrimer(primer);
 
